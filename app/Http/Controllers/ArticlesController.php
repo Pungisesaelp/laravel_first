@@ -4,6 +4,7 @@
 
     use App\Article;
     use App\Http\Requests\ArticleRequest;
+    use Illuminate\Support\Facades\Auth;
 
 
     /**
@@ -13,13 +14,23 @@
     class ArticlesController extends Controller
     {
         /**
+         * ArticlesController constructor.
+         */
+        public function __construct()
+        {
+           // $this->middleware('auth', ['only' => 'create']);
+
+            $this->middleware('auth', ['except' => 'create']);
+
+        }
+
+        /**
          * Показать список всех статей
          * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
          */
         public function index()
         {
             $articles = Article::latest()->published()->get();
-//            $articles = Article::order_by('published_at', 'desc')->get();
 
             return view('articles.index', compact('articles'));
         }
@@ -29,11 +40,9 @@
          * @param $id
          * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
          */
-        public function show($id)
+        public function show(Article $article)
         {
-            $article = null;
 
-            $article = Article::findOrFail($id);
             return view('articles.show', compact('article'));
 
         }
@@ -54,8 +63,9 @@
          */
         public function store(ArticleRequest $request)
         {
+            $article = new Article($request->all());
+            Auth::user()->articles()->save($article);
 
-            Article::create($request->all());
             return redirect('articles');
         }
 
@@ -64,9 +74,8 @@
          * @param $id
          * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
          */
-        public function edit($id)
+        public function edit(Article $article)
         {
-            $article = Article::findOrFail($id);
             return view('articles.edit', compact('article'));
         }
 
@@ -76,9 +85,8 @@
          * @param $id
          * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
          */
-        public function update(ArticleRequest $request, $id)
+        public function update(ArticleRequest $request,Article $article)
         {
-            $article = Article::findOrFail($id);
             $article->update($request->all());
             return redirect('articles');
         }

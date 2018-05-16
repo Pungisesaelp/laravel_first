@@ -10,10 +10,14 @@
         protected $fillable = [
             'title',
             'body',
-            'published_at'
+            'published_at',
         ];
         protected $dates = ['published_at'];
 
+        /**
+         * Засетить published_at атрибут
+         * @param $date
+         */
         public function setPublishedAtAttribute($date)
         {
             $this->attributes['published_at'] = Carbon::createFromFormat('Y-m-d', $date);
@@ -29,4 +33,10 @@
             $query->where('published_at', '>=', Carbon::now());
         }
 
+        /**
+         * Статья принадлежит пользователю
+         */
+        public function  user (){
+
+        }
     }

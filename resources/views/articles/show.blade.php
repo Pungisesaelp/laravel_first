@@ -1,2 +1,2 @@
-hello, bratan, i am article:
-{{$article->body}}
+<h1>{{$article->title}}</h1>
+<h4>{{$article->body}}</h4>

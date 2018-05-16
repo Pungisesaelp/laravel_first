@@ -15,7 +15,7 @@
          * @var array
          */
         protected $fillable = [
-            'name', 'email', 'password',
+            'username', 'email', 'password',
         ];
 
         /**
@@ -27,8 +27,16 @@
             'password', 'remember_token',
         ];
 
+        /** Пользователь может иметь несколько статей
+         * @return \Illuminate\Database\Eloquent\Relations\HasMany
+         */
         public function articles()
         {
             return $this->hasMany('App\Article');
+        }
+
+        public function isATeamManager()
+        {
+            return true;
         }
     }
